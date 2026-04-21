@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const userSchema = new mongoose.Schema({
     firstName: { type: String, required: true, minLength: 4, maxLength: 50 },
     lastName: { type: String, required: true },
-    email: { type: String, required: true, unique: true, lowercase: true, validate(value) {
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true, validate(value) {
         if(!validator.isEmail(value)) throw new Error('Email is not valid')
     }},
     password: { type: String, required: true },
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 userSchema.methods.getJWT = async function() {
-    return await jwt.sign({ _id: this._id }, "Kill@DevTinder", { expiresIn: "1h" });
+    return await jwt.sign({ _id: this._id }, "Kill@DevTinder", { expiresIn: "7d" });
 };
 
 userSchema.methods.validatePassword = async function(password) {
