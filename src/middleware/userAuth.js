@@ -7,7 +7,7 @@ const userAuth = async (req, res, next) => {
     throw new Error("Unauthorized: No token provided");
   }
   try {
-    const decoded = jwt.verify(token, "Kill@DevTinder");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded._id);
     if (!user) {
       throw new Error("User not found");
