@@ -69,13 +69,27 @@ paymentRouter.post("/verify-payment", userAuth, async (req, res) => {
     await paymentRecord.save();
 
     const user = await User.findOne({ _id: paymentRecord.userId });
-    user.isPremium = true
+    user.isPremium = true;
     await user.save();
 
     res.status(200).json({ message: "Payment verified successfully" });
   } catch (error) {
     console.error("Error verifying payment:", error);
     res.status(500).json({ error: "Failed to verify payment" });
+  }
+});
+
+paymentRouter.get("/premium", userAuth, userAuth, async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.user._id });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const { isPremium, membershipType } = user;
+    res.status(200).json({ data: { isPremium, membershipType } });
+  } catch (error) {
+    console.error("Error fetching payment status:", error);
+    res.status(500).json({ error: "Failed to fetch payment status" });
   }
 });
 
